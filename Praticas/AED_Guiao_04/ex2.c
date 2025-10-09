@@ -20,10 +20,11 @@ int pgeo(int list[], int size) {
     int r = list[1] / list[0];
 
     int oper = 0, res = 0;  
-    for (int i = 1; i < size; i++) {
+    for (int i = 2; i < size; i++) {
         oper++;
         if (list[i] != r*list[i-1]) {
             res = 1;
+            break;
         }
     }
     printf("Número de Operações: %d\n",oper);
