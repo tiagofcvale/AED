@@ -1,0 +1,7 @@
+Compilar - cc caminho 
+-Para especeficar o nome do ficheiro compilado podemos fazer cc -Wall -std=c17 Praticas/AED_Guiao_01/hello_X.c -o nomeDoFich -lm
+
+Correr   - ./a.out
+
+A usar diferentes normas de linguagem - cc -Wall -std=c90 Praticas/AED_Guiao_01/cprog.c
+(-Wall para aparecer mensagens de erro detalhadas)
