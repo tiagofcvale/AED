@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "compare": "c",
+        "limits": "c",
+        "new": "c",
+        "cmath": "c",
+        "type_traits": "c"
     }
 }
