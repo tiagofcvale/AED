@@ -4,7 +4,7 @@
 
 long delannoy(int, int);
 unsigned long ADDS;
-unsigned long delannoy_iteractive(int, int);
+unsigned long delannoy_dinamic(int, int);
 long int delCache[SIZE];
 
 void initCache(void) {
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     printf("ADDS: %ld\n\n",ADDS);
     ADDS = 0;
 
-    unsigned long resultado = delannoy_iteractive(m, n);
+    unsigned long resultado = delannoy_dinamic(m, n);
     printf("D(%d, %d) = %lu\n", m, n, resultado);
     printf("ADDS: %ld\n",ADDS);
     ADDS=0;
@@ -40,7 +40,7 @@ long delannoy(int m, int n) {
 }
 
 
-unsigned long delannoy_iteractive(int m, int n) {
+unsigned long delannoy_dinamic(int m, int n) {
     // Array 2D
     unsigned long D[m + 1][n + 1];
 
