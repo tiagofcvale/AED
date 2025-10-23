@@ -71,15 +71,14 @@
 
         if (m == 0 || n == 0) {
             return delCache[m][n] = 1;
+        } else {
+            ADDS+=2;
+            delCache[m][n] =
+                delannoy_memoization(m - 1, n)
+                + delannoy_memoization(m - 1, n - 1)
+                + delannoy_memoization(m, n - 1);
         }
-
-
-        ADDS+=2;
-        delCache[m][n] =
-            delannoy_memoization(m - 1, n)
-            + delannoy_memoization(m - 1, n - 1)
-            + delannoy_memoization(m, n - 1);
-
+        
         return (delCache[m][n]);
     }
 
