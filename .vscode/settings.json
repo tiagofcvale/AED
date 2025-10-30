@@ -5,6 +5,7 @@
         "limits": "c",
         "new": "c",
         "cmath": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "integersqueue.h": "c"
     }
 }
