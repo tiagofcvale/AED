@@ -6,6 +6,7 @@
         "new": "c",
         "cmath": "c",
         "type_traits": "c",
-        "integersqueue.h": "c"
+        "integersqueue.h": "c",
+        "date.h": "c"
     }
 }
