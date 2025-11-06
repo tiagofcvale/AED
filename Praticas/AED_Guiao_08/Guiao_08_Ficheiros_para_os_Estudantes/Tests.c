@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
   if (++test > lasttest) return 0;
   printf("\n%d) PersonCreate---\n", test);
-  const int NP = 10;  // number of persons
+  const int NP = 11;  // number of persons
   Person *person[NP];
   person[0] = PersonCreate("Eva", "Maia", 1977, 10, 20);
   person[1] = PersonCreate("Maria", "Silva", 2003, 12, 30);
@@ -66,6 +66,8 @@ int main(int argc, char *argv[]) {
   person[7] = PersonCreate("Olga", "Costa", 1967, 2, 29);
   person[8] = PersonCreate("Tiago", "Santos", 1996, 6, 13);
   person[9] = PersonCreate("Sara", "Santos", 2007, 3, 1);
+  person[9] = PersonCreate("Sara", "Santos", 2007, 3, 1);
+  person[10] = PersonCreate("Martim", "Nogueira", 2006, 4, 18);
 
   if (++test > lasttest) return 0;
   printf("\n%d) PersonSetCreate---\n", test);
