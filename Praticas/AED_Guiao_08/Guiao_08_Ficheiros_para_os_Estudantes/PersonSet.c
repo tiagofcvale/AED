@@ -153,8 +153,8 @@ Person *PersonSetRemove(PersonSet *ps, int id) {
 
   Person *p = ps->array[person_idx];
 
-  ps->array[person_idx] = ps->array[ps->size - 1];
-  ps->size --;
+  ps->array[person_idx] = PersonSetPop(ps);
+  return p;
 }
 
 // Get the person with given id of *ps.
@@ -205,8 +205,18 @@ PersonSet *PersonSetUnion(const PersonSet *ps1, const PersonSet *ps2) {
 // NOTE: memory is allocated.  Client must call PersonSetDestroy!
 PersonSet *PersonSetIntersection(const PersonSet *ps1, const PersonSet *ps2) {
   // COMPLETE ...
+  PersonSet *ps = PersonSetCreate();
 
-  return NULL;
+    for (int i = 0; i < ps1->size; i++) {
+      Person *p1 = ps1->array[i];
+      for (int j = 0; j < ps2->size; j++ ) {
+        Person *p2 = ps2->array[j];
+        if(p1->id == p2->id) {
+          PersonSetAdd(ps,p1);
+        }
+      }
+    }
+  return ps;
 }
 
 // Return a NEW PersonSet with the set difference of *ps1 and *ps2.
@@ -214,8 +224,16 @@ PersonSet *PersonSetIntersection(const PersonSet *ps1, const PersonSet *ps2) {
 // NOTE: memory is allocated.  Client must call PersonSetDestroy!
 PersonSet *PersonSetDifference(const PersonSet *ps1, const PersonSet *ps2) {
   // COMPLETE ...
+  PersonSet *ps = PersonSetCreate();
 
-  return NULL;
+  for (int i = 0; i < ps1->size; i++) {
+    Person *p1 = ps1->array[i];
+    if (!PersonSetContains(ps2, p1->id)) {
+      PersonSetAdd(ps, p1);
+    }
+  }
+
+  return ps;
 }
 
 // Return true iff *ps1 is a subset of *ps2.
