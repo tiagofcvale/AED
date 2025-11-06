@@ -240,6 +240,7 @@ PersonSet *PersonSetDifference(const PersonSet *ps1, const PersonSet *ps2) {
 int PersonSetIsSubset(const PersonSet *ps1, const PersonSet *ps2) {
   // COMPLETE ...
 
+  
   return 0;
 }
 
