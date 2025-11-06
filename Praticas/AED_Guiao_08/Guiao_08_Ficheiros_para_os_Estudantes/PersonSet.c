@@ -32,15 +32,30 @@ PersonSet *PersonSetCreate() {
   // (The array will be reallocated if necessary, when elements are appended.)
 
   // COMPLETE ...
+  
+  PersonSet *ps = malloc(sizeof(PersonSet));
 
-  return NULL;
+  if (ps==NULL) {return NULL;}
+
+  ps->capacity = INITIAL_CAPACITY;
+  ps->size = 0;
+  ps->array = malloc(ps->capacity * sizeof(Person *));
+
+  if (ps->array == NULL) {
+    free(ps);
+    return NULL;
+  }
+
+  return ps;
 }
 
 // Destroy PersonSet *pps
 void PersonSetDestroy(PersonSet **pps) {
   assert(*pps != NULL);
 
-  // COMPLETE ...
+  free((*pps)->array);
+  free((*pps));
+  *pps = NULL;
 }
 
 int PersonSetSize(const PersonSet *ps) { return ps->size; }
@@ -61,6 +76,13 @@ void PersonSetPrint(const PersonSet *ps) {
 static int search(const PersonSet *ps, int id) {
   // COMPLETE ...
 
+  for (int i = 0; i < ps->size; i++) {
+    Person *p = ps->array[i];
+    if (PersonGetId(p) == id) {
+      return i;
+    }
+  }
+
   return -1;
 }
 
@@ -73,6 +95,16 @@ static void append(PersonSet *ps, Person *p) {
 
   // COMPLETE ...
 
+  if (ps->size == ps->capacity) {
+    //reallocate memory for the array
+    Person **newPs =realloc(ps->array, ps->capacity * 2 * sizeof(Person *));
+    if (newPs == NULL)  {
+      perror("realloc failed"); // sou burro
+      return;
+    }
+    ps->array = newPs;
+  }
+
   ps->array[ps->size] = p;
   ps->size++;
 }
@@ -83,6 +115,13 @@ void PersonSetAdd(PersonSet *ps, Person *p) {
   // You may call the append function here!
 
   // COMPLETE ...
+  int person_idx = search(ps,p->id);
+
+  if (person_idx == -1) {
+    append(ps,p);
+  }
+
+  return;
 }
 
 // Pop one person out of *ps.
@@ -92,7 +131,11 @@ Person *PersonSetPop(PersonSet *ps) {
 
   // COMPLETE ...
 
-  return NULL;
+  Person *p = ps->array[ps->size - 1];
+
+  ps->size--;
+
+  return p;
 }
 
 // Remove the person with given id from *ps, and return it.
@@ -102,7 +145,16 @@ Person *PersonSetRemove(PersonSet *ps, int id) {
 
   // COMPLETE ...
 
-  return NULL;
+  int person_idx = search(ps,id);
+
+  if (person_idx == -1) {
+    return NULL;
+  }
+
+  Person *p = ps->array[person_idx];
+
+  ps->array[person_idx] = ps->array[ps->size - 1];
+  ps->size --;
 }
 
 // Get the person with given id of *ps.
@@ -112,7 +164,15 @@ Person *PersonSetGet(const PersonSet *ps, int id) {
 
   // COMPLETE ...
 
-  return NULL;
+  int person_idx = search(ps, id);
+
+  if (person_idx == -1) {
+    return NULL;
+  }
+  
+  Person *p = ps->array[person_idx];
+
+  return p;
 }
 
 // Return true (!= 0) if set contains person wiht given id, false otherwise.
