@@ -78,7 +78,7 @@ static int search(const PersonSet *ps, int id) {
 
   for (int i = 0; i < ps->size; i++) {
     Person *p = ps->array[i];
-    if (PersonGetId(p) == id) {
+    if (p->id == id) {
       return i;
     }
   }
