@@ -240,15 +240,30 @@ PersonSet *PersonSetDifference(const PersonSet *ps1, const PersonSet *ps2) {
 int PersonSetIsSubset(const PersonSet *ps1, const PersonSet *ps2) {
   // COMPLETE ...
 
-  
-  return 0;
+  for (int i = 0; i < ps1->size; i++) {
+    Person *p1 = ps1->array[i];
+
+    if (!PersonSetContains(ps2, p1->id)) {
+      return 0;
+    }
+  }
+
+  return 1;
 }
 
 // Return true if the two sets contain exactly the same elements.
 int PersonSetEquals(const PersonSet *ps1, const PersonSet *ps2) {
-  // You may call PersonSetIsSubset here!
 
   // COMPLETE ...
+  if (ps1->size != ps2->size) {
+    return 0;
+  }
+
+  // Se ambos forem subsets um do outro, são iguais
+  if (PersonSetIsSubset(ps1, ps2) && PersonSetIsSubset(ps2, ps1)) {
+    return 1;
+  }
 
   return 0;
+
 }
