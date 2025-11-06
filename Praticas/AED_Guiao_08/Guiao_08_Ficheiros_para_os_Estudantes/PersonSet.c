@@ -187,6 +187,15 @@ PersonSet *PersonSetUnion(const PersonSet *ps1, const PersonSet *ps2) {
   PersonSet *ps = PersonSetCreate();
 
   // COMPLETE ...
+  for (int i = 0; i < ps1->size; i++) {
+   Person *p = ps1->array[i];
+   PersonSetAdd(ps,p);
+  }
+
+  for (int i = 0; i < ps2->size; i++) {
+   Person *p = ps2->array[i];
+   PersonSetAdd(ps,p);
+  }
 
   return ps;
 }
