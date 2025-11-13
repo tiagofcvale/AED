@@ -48,7 +48,14 @@ PersonSet *PersonSetCreate() {
 // Destroy PersonSet *pps
 void PersonSetDestroy(PersonSet **pps) {
   assert(*pps != NULL);
-  // COMPLETE ...
+  
+  PersonSet *ps = *pps;
+
+  ListDestroy(&(ps->persons));
+
+  free(ps);
+
+  *pps = NULL;
 }
 
 int PersonSetSize(const PersonSet *ps) { return ListGetSize(ps->persons); }
