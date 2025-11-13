@@ -162,13 +162,10 @@ void ListMove(List* l, int newPos) {
   } else {  // move to an inner node
     // Start at head (or current position) and move forward until newPos.
     // COMPLETE ...
-    l->current = l->head;
+    struct _ListNode* node = l->head;
 
-    int i = 0;
-    while (i < newPos) {
-      l->current = l->current->next;
-      i++;
-    }
+    for (int i = 1; i <= newPos; i++) node = node->next;
+    l->current = node;
   }
   l->currentPos = newPos;
 }
