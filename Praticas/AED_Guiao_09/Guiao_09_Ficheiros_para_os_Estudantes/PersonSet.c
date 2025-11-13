@@ -39,10 +39,10 @@ PersonSet *PersonSetCreate() {
   // You must allocate space for the struct and create an empty persons list!
   // COMPLETE ...
 
-  PersonSet *ps = (PersonSet *)malloc(sizeof(PersonSet));
-  if (ps == NULL) return NULL;
-  ps->persons = ListCreate(cmpP);
-  return ps;
+  PersonSet *pps = (PersonSet *)malloc(sizeof(PersonSet));
+  if (pps == NULL) return NULL;
+  pps->persons = ListCreate(cmpP);
+  return pps;
 }
 
 // Destroy PersonSet *pps
