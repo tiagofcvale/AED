@@ -326,14 +326,13 @@ void* ListRemoveCurrent(List* l) {
   else if (l->currentPos == l->size - 1)
     item = ListRemoveTail(l);
   else {
+    struct _ListNode* cur = l->current;
     struct _ListNode* sn = l->head;
-    while (sn->next != l->current) sn = sn->next;
-    sn->next = l->current->next;
-    void* p = l->current->item;
-    free(l->current); // delete item in current
-    l->current = sn->next;
+    while (sn->next != cur) sn = sn->next;
+    sn->next = cur->next;
+    l->current = cur->next;
     l->size--;
-    item = p;
+    free(cur);
   }
   return item;
 }

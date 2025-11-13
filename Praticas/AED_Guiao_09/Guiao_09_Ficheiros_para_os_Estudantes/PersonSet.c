@@ -84,25 +84,25 @@ static int search(const PersonSet *ps, int id) {
 // Add person *p to *ps.
 // Do nothing if *ps already contains a person with the same id.
 void PersonSetAdd(PersonSet *ps, Person *p) {
-  // COMPLETE ...
+  if (search(ps,p->id) == 0) return;
+
+  ListInsert(ps->persons, p);
 }
 
 // Pop one person out of *ps.
 Person *PersonSetPop(PersonSet *ps) {
   assert(!PersonSetIsEmpty(ps));
   // It is easiest to pop and return the person in the first position!
-  // COMPLETE ...
-
-  return NULL;
+  return (Person*)ListRemoveHead(ps->persons);
 }
 
 // Remove the person with given id from *ps, and return it.
 // If no such person is found, return NULL and leave set untouched.
 Person *PersonSetRemove(PersonSet *ps, int id) {
-  // You may call search here!
-  // COMPLETE ...
+  if (search(ps,id) != 0) return NULL;
+  Person* p = (Person *)ListRemoveCurrent(ps->persons);
 
-  return NULL;
+  return p;
 }
 
 // Get the person with given id of *ps.
@@ -110,8 +110,9 @@ Person *PersonSetRemove(PersonSet *ps, int id) {
 Person *PersonSetGet(const PersonSet *ps, int id) {
   // You may call search here!
   // COMPLETE ...
+  if (search(ps,id) != 0 ) return NULL;
 
-  return NULL;
+  return (Person *)ListGetCurrentItem(ps->persons);
 }
 
 // Return true (!= 0) if set contains person wiht given id, false otherwise.
@@ -124,8 +125,17 @@ int PersonSetContains(const PersonSet *ps, int id) {
 PersonSet *PersonSetUnion(const PersonSet *ps1, const PersonSet *ps2) {
   PersonSet *ps = PersonSetCreate();
 
-  // Merge the two sorted lists (similar to mergesort).
-  // COMPLETE ...
+  ListMoveToHead(ps1->persons);
+
+  while(ListCurrentIsInside(ps1->persons)) {
+    Person *p = (Person *)ListGetCurrentItem;
+    PersonSetAdd(ps,p);
+    ListMoveToNext(ps1->persons);
+  }
+
+  ListMoveToHead(ps2->persons);
+
+  while
 
   return ps;
 }
