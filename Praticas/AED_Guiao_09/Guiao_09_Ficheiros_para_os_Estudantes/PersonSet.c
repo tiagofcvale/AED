@@ -149,6 +149,16 @@ PersonSet *PersonSetUnion(const PersonSet *ps1, const PersonSet *ps2) {
 PersonSet *PersonSetIntersection(const PersonSet *ps1, const PersonSet *ps2) {
   PersonSet *ps = PersonSetCreate();
 
+  while(ListCurrentIsInside(ps1->persons)) {
+    Person* p1 = (Person *)ListGetCurrentItem(ps1->persons);
+    while(ListCurrentIsInside(ps2->persons)) {
+      Person* p2 = (Person *)ListGetCurrentItem(ps2->persons);
+      if (p2->id == p1->id) {
+        PersonSetAdd(ps,p1);
+      }
+    }
+  }
+
   return ps;
 }
 
