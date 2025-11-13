@@ -128,14 +128,18 @@ PersonSet *PersonSetUnion(const PersonSet *ps1, const PersonSet *ps2) {
   ListMoveToHead(ps1->persons);
 
   while(ListCurrentIsInside(ps1->persons)) {
-    Person *p = (Person *)ListGetCurrentItem;
+    Person *p = (Person *)ListGetCurrentItem(ps1->persons);
     PersonSetAdd(ps,p);
     ListMoveToNext(ps1->persons);
   }
 
   ListMoveToHead(ps2->persons);
 
-  while
+  while (ListCurrentIsInside(ps2->persons)) {
+    Person *p = (Person *)ListGetCurrentItem(ps2->persons);
+    PersonSetAdd(ps,p);
+    ListMoveToNext(ps2->persons);
+  }
 
   return ps;
 }
@@ -144,7 +148,6 @@ PersonSet *PersonSetUnion(const PersonSet *ps1, const PersonSet *ps2) {
 // NOTE: memory is allocated.  Client must call PersonSetDestroy!
 PersonSet *PersonSetIntersection(const PersonSet *ps1, const PersonSet *ps2) {
   PersonSet *ps = PersonSetCreate();
-  // COMPLETE ...
 
   return ps;
 }
@@ -153,7 +156,14 @@ PersonSet *PersonSetIntersection(const PersonSet *ps1, const PersonSet *ps2) {
 // NOTE: memory is allocated.  Client must call PersonSetDestroy!
 PersonSet *PersonSetDifference(const PersonSet *ps1, const PersonSet *ps2) {
   PersonSet *ps = PersonSetCreate();
-  // COMPLETE ...
+
+  ListMoveToHead(ps1->persons);
+
+  while(ListCurrentIsInside(ps1->persons)) {
+    Person* p = ListGetCurrentItem(ps1->persons);
+    if (search(ps2,p->id) != 0) PersonSetAdd(ps,p);
+    ListMoveToNext(ps1->persons);
+  }
 
   return ps;
 }
