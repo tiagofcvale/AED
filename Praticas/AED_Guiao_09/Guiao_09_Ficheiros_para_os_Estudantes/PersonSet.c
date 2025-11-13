@@ -172,7 +172,13 @@ PersonSet *PersonSetDifference(const PersonSet *ps1, const PersonSet *ps2) {
 int PersonSetIsSubset(const PersonSet *ps1, const PersonSet *ps2) {
   // COMPLETE ...
 
-  return 0;
+  while (ListCurrentIsInside(ps1->persons)) {
+    Person* p = (Person*)ListGetCurrentItem(ps1->persons);
+    if (search(ps2,p->id) != 0) return 0;
+    ListMoveToNext(ps1->persons);
+  }
+
+  return 1;
 }
 
 // Return true if the two sets contain exactly the same elements.
