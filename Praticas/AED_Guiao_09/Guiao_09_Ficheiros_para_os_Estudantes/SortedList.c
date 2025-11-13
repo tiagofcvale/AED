@@ -119,7 +119,9 @@ void ListSetCurrentItem(const List* l, void* p) {
 // If search succeeds, return 0 and move the current node to the found element.
 // If search fails. return -1 and don't change the current node.
 // (Try to optimize the search to start at the current node if possible.)
-int ListSearch(List* l, const void* p) {
+
+// NOT OPTIMIZED
+int ListSearch0(List* l, const void* p) {
   assert(l->size > 0);
 
   int npos= 0;
@@ -136,6 +138,39 @@ int ListSearch(List* l, const void* p) {
   } 
 
   return -1;
+}
+
+// OPTIMIZED Search
+int ListSearch(List* l, const void* p) {
+  assert(l->size > 0);
+
+  // starting to verify if current element is the one to search
+  int cmp = l->compare(p, l->current->item);
+  if (cmp == 0) return 0;
+
+  // initialize positions and pointer
+  int npos = 0;                     // initialize position to first
+  int maxpos = l->currentPos - 1;   // maxium position to search (before current)
+  struct _ListNode *node = l->head; // initialize pointer to first node
+  if (cmp > 0) {
+    npos = l->currentPos + 1;       // set position to first after current
+    maxpos = l->size -1;            // set maxium position to search (before end)
+    node = l->current->next;        // set pointer to first node after current
+  }
+
+  // searching...
+  while (npos <= maxpos) {
+    if (l->compare(node->item,p) == 0) {
+      l->current = node;
+      l->currentPos = npos;
+      return 0;
+    } else {
+      npos++;
+      node = node->next;
+    }
+  }
+
+  return -1; // failure
 }
 
 // Move to functions
