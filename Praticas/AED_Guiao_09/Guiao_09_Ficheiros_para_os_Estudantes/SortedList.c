@@ -120,28 +120,22 @@ void ListSetCurrentItem(const List* l, void* p) {
 // If search fails. return -1 and don't change the current node.
 // (Try to optimize the search to start at the current node if possible.)
 int ListSearch(List* l, const void* p) {
-  int i = (l->currentPos < 0) ? 0: l->currentPos; //Verificar se o currentPos é válido
+  assert(l->size > 0);
 
-  struct _ListNode* sn = (l->currentPos < 0) ? l->head : l->current;
+  int npos= 0;
+  struct _ListNode* node = l->head;
+  while (node != NULL) {
+    if (l->compare(node->item, p) == 0) {
+      l->current = node;
+      l->currentPos = npos;
+      return 0;
+    } else {
+      npos++;
+      node = node->next;
+    }
+  } 
 
-  while (i < l->size && l->compare(p, sn->item) > 0) {
-    i++;
-    sn = sn->next;
-  }
-
-  if (i == l->size) {
-    return -1; // failure
-  }
-
-  if (l->compare(p, sn->item) < 0) {
-    return -1; // failure
-  }
-
-  // update currentPos
-  l->current = sn;
-  l->currentPos = i;
-
-  return 0; // success
+  return -1;
 }
 
 // Move to functions
