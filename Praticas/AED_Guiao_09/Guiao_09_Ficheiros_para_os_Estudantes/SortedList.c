@@ -160,8 +160,6 @@ void ListMove(List* l, int newPos) {
   } else if (newPos == l->size - 1) {  // move to tail
     l->current = l->tail;
   } else {  // move to an inner node
-    // Start at head (or current position) and move forward until newPos.
-    // COMPLETE ...
     struct _ListNode* node = l->head;
 
     for (int i = 1; i <= newPos; i++) node = node->next;
@@ -299,9 +297,14 @@ void* ListRemoveCurrent(List* l) {
   else if (l->currentPos == l->size - 1)
     item = ListRemoveTail(l);
   else {
-    // find node before current, change its next field,
-    // free current, change current, change size
-    // COMPLETE ...
+    struct _ListNode* sn = l->head;
+    while (sn->next != l->current) sn = sn->next;
+    sn->next = l->current->next;
+    void* p = l->current->item;
+    free(l->current); // delete item in current
+    l->current = sn->next;
+    l->size--;
+    item = p;
   }
   return item;
 }
