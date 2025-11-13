@@ -160,7 +160,7 @@ PersonSet *PersonSetDifference(const PersonSet *ps1, const PersonSet *ps2) {
   ListMoveToHead(ps1->persons);
 
   while(ListCurrentIsInside(ps1->persons)) {
-    Person* p = ListGetCurrentItem(ps1->persons);
+    Person* p = (Person *) ListGetCurrentItem(ps1->persons);
     if (search(ps2,p->id) != 0) PersonSetAdd(ps,p);
     ListMoveToNext(ps1->persons);
   }
