@@ -87,7 +87,7 @@ unsigned int BSTreeGetNumberOfNodes(const BSTree* header) {
 static int _treeGetHeightREC(const struct _BSTreeNode* root) {
   if (root == NULL)
     return -1;
-    
+
   int hLeft = _treeGetHeightREC(root->left);
   int hRight = _treeGetHeightREC(root->right);
 
@@ -116,9 +116,13 @@ void* BSTreeGetMin(const BSTree* header) {
   assert(header != NULL);
   assert(!BSTreeIsEmpty(header));
 
-  // COMPLETE the function with an ITERATIVE solution.
-  // ...
-  return NULL;
+  struct _BSTreeNode* curr = header->root;
+
+  while(curr->left != NULL) {
+    curr = curr->left;
+  }
+
+  return curr;
 }
 
 // Finds and returns the largest item stored in the (sub-)tree rooted in the
