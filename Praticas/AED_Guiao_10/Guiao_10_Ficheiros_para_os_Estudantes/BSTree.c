@@ -55,9 +55,9 @@ static void _treeDestroy(struct _BSTreeNode** pRoot) {
 // 2) Depth-first pre-order,
 // 3) Depth-first in-order or
 // 4) Depth-first post-order?
-// A: ...
+// A: 4)
 // Q: Is this the best order here? Why?
-// A: ...
+// A: Yes, its the best and only order to destroy a tree
 
 void BSTreeDestroy(BSTree** pHeader) {
   BSTree* header = *pHeader;
@@ -85,9 +85,13 @@ unsigned int BSTreeGetNumberOfNodes(const BSTree* header) {
 // Compute the height of the (sub-)tree whose root node is root.
 // (Internal RECURSIVE function, that can be used for checking.)
 static int _treeGetHeightREC(const struct _BSTreeNode* root) {
-  // COMPLETE
-  // ...
-  return -1;
+  if (root == NULL)
+    return -1;
+    
+  int hLeft = _treeGetHeightREC(root->left);
+  int hRight = _treeGetHeightREC(root->right);
+
+  return 1 + (hLeft > hRight ? hLeft : hRight);
 }
 
 // Internal function that acccesses the height field, if the node exists
