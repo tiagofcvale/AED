@@ -131,10 +131,11 @@ void* BSTreeGetMin(const BSTree* header) {
 static void* _treeGetMax(const struct _BSTreeNode* root) {
   assert(root != NULL);
 
-  // COMPLETE the function with a RECURSIVE solution.
-  // ...
+  if (root->right == NULL) {
+    return root->item;
+  }
 
-  return NULL;
+  return _treeGetMax(root->right);
 }
 
 // Finds and returns the largest item stored in the tree.
