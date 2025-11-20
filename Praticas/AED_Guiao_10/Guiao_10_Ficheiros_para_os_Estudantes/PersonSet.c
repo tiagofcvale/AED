@@ -42,8 +42,12 @@ PersonSet *PersonSetCreate() {
   // You must allocate space for the struct and create an empty persons tree!
   // COMPLETE
   // ...
+  PersonSet* ps = (PersonSet*)malloc(sizeof(PersonSet));
+  if (ps == NULL) return NULL;
 
-  return NULL;
+  ps->persons = BSTreeCreate(cmpP, printP);
+
+  return ps;
 }
 
 // Destroy PersonSet *pps
