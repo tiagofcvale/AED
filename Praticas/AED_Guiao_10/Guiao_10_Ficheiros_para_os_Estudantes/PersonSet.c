@@ -91,8 +91,10 @@ static Person *search(const PersonSet *ps, int id) {
 // Add person *p to *ps.
 // Do nothing if *ps already contains a person with the same id.
 void PersonSetAdd(PersonSet *ps, Person *p) {
-  // COMPLETE
-  // ...
+  if (BSTreeContains(ps->persons, p)) {
+    return;
+  }
+  BSTreeAdd(ps->persons, p);
 }
 
 // Pop one person out of *ps.
