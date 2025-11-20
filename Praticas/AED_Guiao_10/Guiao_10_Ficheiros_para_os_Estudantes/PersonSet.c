@@ -101,10 +101,11 @@ void PersonSetAdd(PersonSet *ps, Person *p) {
 Person *PersonSetPop(PersonSet *ps) {
   assert(!PersonSetIsEmpty(ps));
   // It is easiest to pop and return the first person in the set!
-  // COMPLETE
-  // ...
+  Person *p =(Person*)BSTreeGetMin(ps->persons);
 
-  return NULL;
+  BSTreeRemove(ps->persons, p);
+
+  return p;
 }
 
 // Remove the person with given id from *ps, and return it.
@@ -121,10 +122,11 @@ Person *PersonSetRemove(PersonSet *ps, int id) {
 // return NULL if it is not in the set.
 Person *PersonSetGet(const PersonSet *ps, int id) {
   // You may call search here!
-  // COMPLETE
-  // ...
 
-  return NULL;
+  Person temp;
+  temp.id = id;
+
+  return (Person *)BSTreeSearch(ps->persons, &temp);
 }
 
 // Return true (!= 0) if set contains person with given id, false otherwise.

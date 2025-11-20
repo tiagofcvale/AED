@@ -432,7 +432,8 @@ static void _BSTreeAddItems(const struct _BSTreeNode* p, Queue* q) {
 // 4) Depth-first post-order?
 // A: 3)
 // Q: Is this the required order here? Why?
-// A: ...
+// A: Yes, its the correct way, because a BST store elements in order, this way
+//    a travessia returns the elements by ascending order.
 
 // Returns a QUEUE with the ordered tree elements
 // or an EMPTY QUEUE, if the tree is empty.
