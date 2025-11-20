@@ -177,12 +177,11 @@ int BSTreeContains(const BSTree* header, const void* item) {
 // (Internal function used in BSTreeTraverseINOrder.)
 static void _treeTraverseINOrder(struct _BSTreeNode* root,
                                  void (*function)(void* p)) {
-  // CORRECT THE FUNCTION SO THAT NODES ARE TRAVERSED IN INCREASING ORDER.
-  // ...
+  // FUNCTION SO THAT NODES ARE TRAVERSED IN INCREASING ORDER.
   if (root == NULL) return;
-  function(root->item);
-  _treeTraverseINOrder(root->right, function);
-  _treeTraverseINOrder(root->left, function);
+  _treeTraverseINOrder(root->right, function);  // visitar sub-árvore esquerda
+  function(root->item);                         // visitar o nó
+  _treeTraverseINOrder(root->left, function);   // visitar sub-árvore direita
 }
 
 // Applies the function function to every tree item.
