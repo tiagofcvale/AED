@@ -421,15 +421,16 @@ static void _BSTreeAddItems(const struct _BSTreeNode* p, Queue* q) {
   if (p == NULL) {
     return;
   }
-  // COMPLETE
-  // ...
+  _BSTreeAddItems(p->left, q);
+  QueueEnqueue(q, p->item);
+  _BSTreeAddItems(p->right, q);
 }
 // Q: What kind of tree traversal is this function doing?
 // 1) Breadth-first,
 // 2) Depth-first pre-order,
 // 3) Depth-first in-order or
 // 4) Depth-first post-order?
-// A: ...
+// A: 3)
 // Q: Is this the required order here? Why?
 // A: ...
 
