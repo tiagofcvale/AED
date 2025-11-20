@@ -156,8 +156,14 @@ void* BSTreeSearch(const BSTree* header, const void* item) {
 
   struct _BSTreeNode* current = header->root;
   while (current != NULL) {
-    // COMPLETE THE LOOP.
-    // ...
+    int cmpr = header->compare(item, current->item);
+    if (cmpr == 0) {
+      return current->item;
+    } else if (cmpr < 0) {
+      current = current->left; // Item procuradado é menor
+    } else {
+      current = current->right; // Item procurado é maior 
+    }
   }
   return NULL;
 }
