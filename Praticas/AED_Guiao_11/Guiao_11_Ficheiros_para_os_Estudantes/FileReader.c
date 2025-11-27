@@ -10,6 +10,8 @@
 #include "FileReader.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <sys/types.h>
 
 FileReader* FileReaderOpen(char* fname) {
   FileReader* fr = (FileReader*)malloc(sizeof(*fr));
