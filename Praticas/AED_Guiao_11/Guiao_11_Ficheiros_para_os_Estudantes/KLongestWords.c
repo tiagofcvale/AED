@@ -179,10 +179,10 @@ int main(int argc, char** argv) {
   // and free its allocated memory
   // until the heap is empty
   while (!MinHeapIsEmpty(topKByLength)) {
-    heapElemPtr minElem = MinHeapGetMin(topKByLength);
-    printf("(%s, %d)\n", minElem->word, minElem->length);
+    heapElemPtr p = (heapElemPtr)MinHeapGetMin(topKByLength);
+    printer(p);
     MinHeapRemoveMin(topKByLength);
-    free(minElem);
+    free(p);
   }
 
   // Freeing the allocated memory
