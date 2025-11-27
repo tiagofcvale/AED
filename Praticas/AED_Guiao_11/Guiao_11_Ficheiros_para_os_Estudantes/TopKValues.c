@@ -71,20 +71,29 @@ int main(int argc, char* argv[]) {
   }
 
   // Create heap
-  MinHeap* h = ... if (h == NULL) abort();
+  MinHeap* h = MinHeapCreate(k, comparator, printer); if (h == NULL) abort();
 
   // Read the first K values into a MIN-heap
   //    Allocate memory space for an integer
   //    Read it from file
   //    Insert it in the heap
 
-  for (...) {
-    ...
+  for (int i = 1; i <= k; i++) {
+    int *num = (int*)malloc(sizeof(int));
+    fscanf(f, "%d", num);
+    MinHeapInsert(h, num);
   }
 
   // Read and process each one of the remaining values
   while (!feof(f)) {
-    ...
+    int *num = (int*)malloc(sizeof(int));
+    fscanf(f, "%d", num);
+    int* min = (int*)MinHeapGetMin(h);
+    if (*num > *min) {
+      MinHeapRemoveMin(h);
+      MinHeapInsert(h, num);
+      free(min);
+    }
   }
 
   // The heap stores the largest k values
