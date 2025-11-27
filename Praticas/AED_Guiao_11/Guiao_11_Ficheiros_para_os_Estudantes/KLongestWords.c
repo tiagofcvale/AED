@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
         word[(j < 63) ? j : 63] = '\0';
 
         // Update the HASH TABLE with the occurrence of the current word
-        // ...
+        HashTableIncrement(hashT, word);
 
         // Update the MIN-HEAP, if needed
         heapElemPtr p;
@@ -126,10 +126,12 @@ int main(int argc, char** argv) {
           // Add to the MIN-HEAP until it has k elements
 
           // Allocate the new heap element and set its attributes
-          // ...
+          p = (heapElemPtr)malloc(sizeof(struct heapElem));
+          strcpy(p->word, word);
+          p->length = strlen(word);
 
           // Add it to the MIN-HEAP
-          // ...
+          MinHeapInsert(topKByLength, (void*) p);
 
         } else if (HashTableGet(hashT, word) == 1) {
           // The MIN-HEAP has K elements
@@ -145,7 +147,19 @@ int main(int argc, char** argv) {
           // ---> allocate the pair (word, length) for the current word
           //      and set its attributes
           // ---> add it to the heap
-          // ...
+          if (strlen(word) > p->length) {
+            // Palavra atual é maior
+            // remover o min da heap e libertar memória
+            MinHeapRemoveMin(topKByLength);
+            free(p);
+
+            // adicionar a palavra atual à heap
+            // o novo elemento da heap
+            p = (heapElemPtr)malloc(sizeof(struct heapElem));
+            strcpy(p->word, word);
+            p->length = strlen(word);
+
+            MinHeapInsert(topKByLength, p);
         }
       }
     }
@@ -164,11 +178,17 @@ int main(int argc, char** argv) {
   // Loop to print and remove the min element from the heap,
   // and free its allocated memory
   // until the heap is empty
-  // ...
+  while (!MinHeapIsEmpty(topKByLength)) {
+    heapElemPtr minElem = MinHeapGetMin(topKByLength);
+    printf("(%s, %d)\n", minElem->word, minElem->length);
+    MinHeapRemoveMin(topKByLength);
+    free(minElem);
+  }
 
   // Freeing the allocated memory
   HashTableDestroy(&hashT);
   MinHeapDestroy(&topKByLength);
 
   return 0;
+  }
 }
