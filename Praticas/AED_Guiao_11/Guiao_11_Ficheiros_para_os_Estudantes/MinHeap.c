@@ -147,9 +147,9 @@ void MinHeapRemoveMin(MinHeap* ph) {
 }
 
 // Check the (min-)heap property (the heap invariant):
-//    Each node must be <= than each of its children.
+// Each node must be <= than each of its children.
 // Equivalently (but easier):
-//    Each node must be >= its parent.
+// Each node must be >= its parent.
 int MinHeapCheck(MinHeap* ph) {
   // For each node other than root: compare with its parent
   for (unsigned int n = 1; n < ph->size; n++) {
