@@ -53,32 +53,34 @@ int main(int argc, char* argv[]) {
   int numFiles = argc - 1;
 
   // Create heap with capacity for one line buffer per file:
-  MinHeap* H = ... if (H == NULL) abort();
+  MinHeap* H = MinHeapCreate(numFiles, comparator, printer); 
+  if (H == NULL) abort();
 
   for (int i = 0; i < numFiles; i++) {
     // Open a FileReader for each argument:
-    FileReader* fr = ...;
+    FileReader* fr = FileReaderOpen(argv[i + 1]);
     if (FileReaderError(fr)) {
       perror(fr->name);
       exit(1);
     }
 
     // Insert this file reader object into the Heap:
-    // ...
+    MinHeapInsert(H, fr);
   }
 
   while (numFiles > 0) {
     FileReader* fr;
 
     // 1a. Get the first file reader from the Heap and remove it:
-    fr = ...;
+    fr = MinHeapGetMin(H);
+    MinHeapRemoveMin(H);
 
     // 1b. Output the current line from that reader:
     char* line = FileReaderBuffer(fr);
     fputs(line, stdout);  // output the line
 
     // 2a. Advance the reader to the next line:
-    int ok = ...;
+    int ok = FileReaderNextLine(fr);
 
     if (ok) {  // On success:
       // 2b: Reinsert file reader into the Heap:
