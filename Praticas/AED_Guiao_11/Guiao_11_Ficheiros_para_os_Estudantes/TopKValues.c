@@ -99,8 +99,9 @@ int main(int argc, char* argv[]) {
   // The heap stores the largest k values
   // List them by removing each one from the heap
 
-  while (...) {
-    ...
+  while (!MinHeapIsEmpty(h)) {
+    printer(MinHeapGetMin(h));
+    MinHeapRemoveMin(h);
   }
 
   // House-keeping
