@@ -11,12 +11,12 @@
 /// 2025
 
 // Student authors (fill in below):
-// NMec: 124917
-// Name: Duarte Almeida Pereira Coelho
-// NMec: 126480
-// Name: João Maria Figueiredo Ribeiro
+// NMec:125804
+// Name:Dinis Filipe da Silva Néri Marques Carvalho
+// NMec:119832
+// Name:Vasco Peixoto Araújo
 //
-// Date: 27/11/2026
+// Date:15/11/2025
 //
 
 #include "imageRGB.h"
@@ -283,23 +283,33 @@ void ImageDestroy(Image* imgp) {
 /// (The caller is responsible for destroying the returned image!)
 Image ImageCopy(const Image img) {
   assert(img != NULL);
-  Image newImg = AllocateImageHeader(img->width, img->height);
 
-  // Copy LUT
-  newImg->num_colors = img->num_colors;
-  for (uint16 i = 0; i < img->num_colors; i++) {
-    newImg->LUT[i] = img->LUT[i];
+  Image copia = malloc(sizeof(struct image)); //alocar memória para a copia da imagem
+  assert(copia !=NULL);  //garantir que foi alocada memória para a cópia
+
+  copia->width = img->width; //copiar o comprimento da imagem
+  copia->height = img->height; //copiar a altura da imagem
+  copia->num_colors = img ->num_colors; //copiar o numero de cores da imagem 
+
+  copia->image = malloc(copia->height * sizeof(uint16*));//alocar memoria para os pixeis
+  assert(copia->image != NULL);
+
+  copia->LUT = malloc(FIXED_LUT_SIZE * sizeof(rgb_t));  //alocar memória para a LUT
+  assert(copia->LUT != NULL);
+  for (uint16 i = 0; i < copia->num_colors; i++) {
+      copia->LUT[i] = img->LUT[i];  //copiar a cor usada em cada pixel
   }
 
-  // Copy image data
-  for (uint32 i = 0; i < img->height; i++) {
-    newImg->image[i] = AllocateRowArray(img->width);
-    for (uint32 j = 0; j < img->width; j++) {
-      newImg->image[i][j] = img->image[i][j];
+  for (uint32 i = 0; i < copia->height; i++) {
+    copia->image[i] = malloc(copia->width * sizeof(uint16)); //alocar memoria para cada pixel
+    assert(copia->image[i] != NULL);
+    for (uint32 j = 0; j < copia->width; j++) {
+        copia->image[i][j] = img->image[i][j]; //copiar os pixeis da imagem 
     }
   }
+  
 
-  return newImg;
+  return copia; //devolve a imagem que copiamos
 }
 
 /// Printing on the console
@@ -568,27 +578,35 @@ int ImageIsEqual(const Image img1, const Image img2) {
   assert(img1 != NULL);
   assert(img2 != NULL);
 
-  // Images are different if they don't have the same dimensions
-  if (img1->width != img2->width || img1->height != img2->height) {
-    return 0;
+  uint32 width_img1 = img1->width;  //width_img1 = comprimento da imagem 1
+  uint32 height_img1 = img1 ->height; //height_img1 = altura da imagem 1
+  uint32 width_img2 = img2->width; //comprimento da imagem 2
+  uint32 height_img2 = img2->height;  //altura da imagem 2
+
+  if (width_img1 != width_img2 || height_img1 != height_img2){
+    return 0; //se as medidas das imagens forem diferentes, nunca podem ser iguais.
   }
 
-  // Compare image pixels
-  for (uint32 i = 0; i < img1->height; i++) {
-    for (uint32 j = 0; j < img1->width; j++) {
-      uint16 label1 = img1->image[i][j];
-      uint16 label2 = img2->image[i][j];
-      
-      rgb_t color1 = img1->LUT[label1];
-      rgb_t color2 = img2->LUT[label2];
-      
-      if (color1 != color2) {
-        return 0;
+  for (uint32 i =0; i < height_img1;i++){
+    for(uint32 j = 0; j < width_img1;j++){
+      InstrCount[0]++; // contador para verificar o número de comparações que o programa faz para diferentes imagens.
+
+      uint16 pixel1 = img1->image[i][j];  //obter o pixel da img1 com aquela posição
+      uint16 pixel2 = img2->image[i][j];  //obter o pixel da img2 com aquela posição
+      rgb_t color1 = img1->LUT[pixel1]; //obter as cores RGB do pixel da imagem 1
+      rgb_t color2 = img2->LUT[pixel2]; //obter as cores RGB do pixel da imagem 2
+      if (color1 != color2){  //se as cores forem diferentes, as imagens são diferentes
+        return 0;             
       }
     }
   }
+  
 
-  return 1;
+  return 1; //imagens iguais se as dimensões e as cores de cada pixel das duas imagens forem iguais
+  //Nesta função, o melhor caso é que a diferença ocorre no primeiro pixel que é comparado
+  //O pior caso é em que todas as comparações sejam feitas (independentemente das imagens serem iguais ou diferentes)
+  //Neste último caso, o número de comparações seria o comprimento * altura da imagem
+
 }
 
 int ImageIsDifferent(const Image img1, const Image img2) {
@@ -615,22 +633,34 @@ int ImageIsDifferent(const Image img1, const Image img2) {
 Image ImageRotate90CW(const Image img) {
   assert(img != NULL);
 
-  Image newImg = AllocateImageHeader(img->height, img->width);
+  Image img_rotated = malloc(sizeof(struct image));
+  assert (img_rotated != NULL); //garante que a memória foi alocada para a nova imagem
 
-  // Copy LUT
-  newImg->num_colors = img->num_colors;
-  for (uint16 i = 0; i < img->num_colors; i++) {
-    newImg->LUT[i] = img->LUT[i];
+  img_rotated -> width = img-> height; //ao rodar a imagem 90º, a largura vira a altura
+  img_rotated -> height = img -> width;  //e a altura vira a largura
+  img_rotated -> num_colors = img -> num_colors; //numero de cores mantém-se
+
+  img_rotated -> LUT = malloc(FIXED_LUT_SIZE * sizeof(rgb_t));
+  assert (img_rotated->LUT !=NULL);
+
+  for (uint32 c = 0; c < img_rotated->num_colors;c++){
+    img_rotated->LUT[c] = img->LUT[c];  //copiar cada cor
   }
 
-  // Copy image data
-  for (uint32 i = 0; i < newImg->height; i++) {
-    newImg->image[i] = AllocateRowArray(newImg->width);
-    for (uint32 j = 0; j < newImg->width; j++) {
-      newImg->image[i][j] = img->image[img->height - j - 1][i];
+  img_rotated ->image = malloc(img_rotated->height * sizeof(uint16*)); //Alocar a matriz dos pixeis
+  assert (img_rotated ->image != NULL);
+
+  for (uint32 i = 0; i < img_rotated ->height;i++){
+    img_rotated ->image[i] = malloc(img_rotated->width * sizeof(uint16));
+    assert (img_rotated->image[i] != NULL);
+    for (uint32 j = 0; j < img_rotated ->width;j++){
+      uint32 coluna = i;  //coluna original
+      uint32 linha = img->height -1-j; //linha original
+      img_rotated ->image[i][j] = img->image[linha][coluna];  //copiar os pixeis para as novas posições
     }
   }
-  return newImg;
+
+  return img_rotated;
 }
 
 /// Rotate 180 degrees clockwise (CW).
@@ -642,23 +672,34 @@ Image ImageRotate90CW(const Image img) {
 Image ImageRotate180CW(const Image img) {
   assert(img != NULL);
 
-  Image newImg = AllocateImageHeader(img->width, img->height);
+  Image img_rotated = malloc(sizeof(struct image));
+  assert (img_rotated !=NULL);
+  
+  img_rotated ->width = img->width; //ao rodar 180º, os tamanhos mantêm-se
+  img_rotated ->height = img->height;
+  img_rotated ->num_colors = img->num_colors; //as cores também
 
-  // Copy LUT
-  newImg->num_colors = img->num_colors;
-  for (uint16 i = 0; i< img->num_colors; i++) {
-    newImg->LUT[i] = img->LUT[i];
+  img_rotated ->LUT = malloc(FIXED_LUT_SIZE * sizeof(rgb_t));
+  assert(img_rotated ->LUT !=NULL);
+  for (uint32 i = 0; i < img_rotated ->num_colors; i++){
+    img_rotated->LUT[i] = img ->LUT[i]; //copiar cada cor
   }
 
-  // Copy image data
-  for (uint32 i = 0; i< img->height; i++) {
-    newImg->image[i] = AllocateRowArray(img->width);
-    for (uint32 j = 0; j < img->width; j++) {
-      newImg->image[i][j] = img->image[img->height - i - 1][img->width - j - 1];
+  img_rotated ->image = malloc (img_rotated->height * sizeof(uint16*)); //Alocar array de linhas desta nova imagem
+  assert(img_rotated->image !=NULL);
+
+  for(uint32 nova_linha = 0; nova_linha < img_rotated->height;nova_linha++){
+    img_rotated->image[nova_linha] = malloc(img_rotated->width * sizeof(uint16));
+    assert(img_rotated ->image[nova_linha] != NULL);
+
+    for(uint32 nova_coluna =0; nova_coluna < img_rotated->width; nova_coluna++){
+      uint32 linha =img->height -1 - nova_linha;  //linha invertida
+      uint32 coluna = img ->width -1 - nova_coluna; //coluna invertida
+      img_rotated -> image[nova_linha][nova_coluna] = img->image[linha][coluna];
     }
   }
-
-  return newImg;
+  
+  return img_rotated;
 }
 
 /// Check whether pixel coords (u, v) are inside img.
@@ -688,21 +729,25 @@ int ImageIsValidPixel(const Image img, int u, int v) {
 /// Region growing using the recursive flood-filling algorithm.
 int ImageRegionFillingRecursive(Image img, int u, int v, uint16 label) {
   assert(img != NULL);
+  assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
 
-  int numPixels = 0;
+  uint16 pixel = img->image[u][v]; 
 
-  if (ImageIsValidPixel(img, u, v) && img->image[u][v] == 0) {
-	  img->image[u][v] = label;
-	  numPixels++;
-
-	  numPixels += ImageRegionFillingRecursive(img, u + 1, v, label);
-	  numPixels += ImageRegionFillingRecursive(img, u, v + 1, label);
-	  numPixels += ImageRegionFillingRecursive(img, u, v - 1, label);
-	  numPixels += ImageRegionFillingRecursive(img, u - 1, v, label);
+  // Se o pixel não pertencer ao background, não é preenchido
+  if (pixel != WHITE){
+        return 0;
   }
+  //Preenche o pixel
+  img->image[u][v] = label;
 
-  return numPixels;
+    
+  ImageRegionFillingRecursive(img, u + 1, v,label);
+  ImageRegionFillingRecursive(img,u - 1, v,label);
+  ImageRegionFillingRecursive(img, u, v + 1,label);
+  ImageRegionFillingRecursive(img, u,v - 1, label);  //Chamar a função para os 4 pixeis adjacentes ao selecionado e fazer recursão
+
+  return 1;
 }
 
 /// Region growing using a STACK of pixel coordinates to
@@ -712,35 +757,41 @@ int ImageRegionFillingWithSTACK(Image img, int u, int v, uint16 label) {
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
 
-  // Don't fill if pixel isn't background
-  if (img->image[u][v] != 0)
-	  return 0;
+  uint16 pixel = img->image[u][v];
 
-  // Create stack with maximum size 5
-  // This is enough for the first pixel, and the surrounding 4 pixels
-  // The stack will be dynamically increased as needed
-  Stack *stack = StackCreate(5);
-
-  // Add the first pixel
-  StackPush(stack, PixelCoordsCreate(u,v));
-
-  // Fill a pixel from the stack and add the adjacent pixels to it, untill the stack is empty
-  int numPixels = 0;
-  while (!StackIsEmpty(stack)) {
-	  PixelCoords c = StackPop(stack);
-	  if (ImageIsValidPixel(img, c.u, c.v) && img->image[c.u][c.v] == 0) {
-		  img->image[c.u][c.v] = label;
-		  numPixels++;
-
-		  StackPush(stack, PixelCoordsCreate(c.u + 1, c.v));
-		  StackPush(stack, PixelCoordsCreate(c.u, c.v + 1));
-		  StackPush(stack, PixelCoordsCreate(c.u, c.v - 1));
-		  StackPush(stack, PixelCoordsCreate(c.u - 1, c.v));
-	  }
+  if (pixel != WHITE){
+    return 0; //só preenche o pixel se este ainda não estiver preenchido
   }
 
-  StackDestroy(&stack);
-  return numPixels;
+  Stack* stack = StackCreate(img->width * img->height);
+  assert(stack != NULL);
+  StackPush(stack,(PixelCoords){u,v});  //coloca o pixel inicial na stack
+  int contador_stack = 0;
+
+  while (!StackIsEmpty(stack)){ //executar enquanto houver pixeis na stack
+    PixelCoords p =StackPop(stack);
+    int x = p.u;  //coordenada da coluna
+    int y = p.v;  //coordenada da linha
+
+    if (!ImageIsValidPixel(img,x,y)){
+      continue;
+    }
+    if (img ->image[y][x] != WHITE){
+      continue;
+    }
+
+    img->image[y][x] = label;
+    contador_stack++;
+
+    StackPush(stack, (PixelCoords){x+1,y});
+    StackPush(stack, (PixelCoords){x-1,y});
+    StackPush(stack, (PixelCoords){x,y+1});
+    StackPush(stack, (PixelCoords){x,y-1}); //pixeis adjacentes ao escolhido
+  }
+
+  StackDestroy(&stack); //destroi a stack depois de preencher a imagem e coloca o ponteiro a NULL
+
+  return contador_stack; //devolver a quantidade de pixeis que foram preenchidos
 }
 
 /// Region growing using a QUEUE of pixel coordinates to
@@ -750,35 +801,43 @@ int ImageRegionFillingWithQUEUE(Image img, int u, int v, uint16 label) {
   assert(ImageIsValidPixel(img, u, v));
   assert(label < FIXED_LUT_SIZE);
 
-  // Don't fill if pixel isn't background
-  if (img->image[u][v] != 0)
-	  return 0;
+  uint16 pixel = img->image[u][v];
 
-  // Create heap with maximum size 5
-  // This is enough for the first pixel, and the surrounding 4 pixels
-  // The heap will be dynamically increased as needed
-  Queue *queue = QueueCreate(5);
+  if (pixel != WHITE){
+    return 0; 
+  } //garante que o pixel tem de ser preenchido antes de avançar com o programa
 
-  // Add the first pixel
-  QueueEnqueue(queue, PixelCoordsCreate(u,v));
+  Queue* queue =QueueCreate(img->width * img->height); //Queue com capacidade para os pixeis da imagem
+  assert(queue !=NULL);
 
-  // Fill a pixel from the heap and add the adjacent pixels to it, untill the heap is empty
-  int numPixels = 0;
-  while (!QueueIsEmpty(queue)) {
-	  PixelCoords c = QueueDequeue(queue);
-	  if (ImageIsValidPixel(img, c.u, c.v) && img->image[c.u][c.v] == 0) {
-		  img->image[c.u][c.v] = label;
-		  numPixels++;
+  QueueEnqueue(queue,(PixelCoords){u,v}); //adiciona o pixel inicial
+  int contador_queue = 0;
 
-		  QueueEnqueue(queue, PixelCoordsCreate(c.u + 1, c.v));
-		  QueueEnqueue(queue, PixelCoordsCreate(c.u, c.v + 1));
-		  QueueEnqueue(queue, PixelCoordsCreate(c.u, c.v - 1));
-		  QueueEnqueue(queue, PixelCoordsCreate(c.u - 1, c.v));
-	  }
+  while (!QueueIsEmpty(queue)){
+    PixelCoords p = QueueDequeue(queue);
+    int x = p.u; //coordenada da coluna
+    int y = p.v; //coordenada da linha
+
+    if (!ImageIsValidPixel(img,x,y)){ //ignora todos os pixeis fora da imagem
+      continue;
+    }
+    
+    if (img->image[y][x] != WHITE){ //apenas preenche pixeis que ainda não foram preenchidos, ou seja, qualquer pixel branco
+      continue;
+    }
+    img->image[y][x] = label;
+    contador_queue++;
+
+    QueueEnqueue(queue, (PixelCoords){x+1,y});
+    QueueEnqueue(queue, (PixelCoords){x-1,y});
+    QueueEnqueue(queue, (PixelCoords){x,y+1});
+    QueueEnqueue(queue, (PixelCoords){x,y-1}); //adiciona os pixeis adjacentes ao escolhido
+
   }
-
   QueueDestroy(&queue);
-  return numPixels;
+
+
+  return contador_queue; //devolve o número de pixeis preenchidos
 }
 
 /// Image Segmentation
@@ -795,20 +854,22 @@ int ImageSegmentation(Image img, FillingFunction fillFunct) {
   assert(img != NULL);
   assert(fillFunct != NULL);
 
-  rgb_t color = GenerateNextColor(0);
+  int regioes = 0;    //conta regioes
+  rgb_t cor_atual = 0; // cor inicial para gerar outras cores novas
 
-  int numRegions = 0;
-  for (uint32 i = 0; i < img->height; i++) {
-	  for(uint32 j = 0; j < img->width; j++) {
-		  // If the pixel isn't filled, do a flood fill starting from this pixel
-		  if (img->image[i][j] == 0) {
-			  numRegions++;
-			  int colorIdx = LUTAllocColor(img, color);
-			  fillFunct(img, i, j, colorIdx);
-			  color = GenerateNextColor(color);
-		  }
-	  }
+  for (uint32 v = 0; v < img->height;v++){ //percore as linhas
+    for(uint32 u = 0; u< img->width;u++){ //percorre as colunas
+
+      if (img->image[v][u] == WHITE){
+        cor_atual = GenerateNextColor(cor_atual); //altera a cor atual para outra cor
+        uint16 cor_pixel = LUTAllocColor(img, cor_atual);
+        int pixel_preenchido = fillFunct(img,u,v,cor_pixel);
+        if (pixel_preenchido > 0){
+          regioes++;
+        }
+      }
+    }
   }
 
-  return numRegions;
+  return regioes;
 }
