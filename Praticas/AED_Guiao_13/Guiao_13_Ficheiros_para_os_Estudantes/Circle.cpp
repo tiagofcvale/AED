@@ -5,7 +5,7 @@
 //
 // COMPLETE the code, according to Circle.h
 //
-
+#include <cmath>
 #include "Circle.h"
 
 #define _USE_MATH_DEFINES
@@ -18,47 +18,41 @@
 #include "Figure.h"
 #include "Point.h"
 
-Circle::Circle(void) {
-  // Circle of radius 1 and centered at (0,0)
-  // COMPLETE
+Circle::Circle(void) : 
+  Figure(Point(0.0,0.0), "black"), radius_(1.0) {
 }
 
-Circle::Circle(Point center, const std::string& color, double length) {
-  // Ensure that the radius is larger than 0.0
-  // COMPLETE
+Circle::Circle(Point center, const std::string& color, double length) 
+  : Figure(center, color), radius_(length > 0.0 ? length : 1.0) {
 }
 
-Circle::Circle(double x, double y, const std::string& color, double length) {
-  // Ensure that the radius is larger than 0.0
-  // COMPLETE
+Circle::Circle(double x, double y, const std::string& color, double length)
+  : Figure(Point(x,y), color), radius_(length > 0.0 ? length : 1.0) {
+
 }
 
 double Circle::GetRadius(void) const { return radius_; }
 void Circle::SetRadius(double length) {
-  // Ensure that the radius is larger than 0.0
-  // COMPLETE
+  radius_ = (length > 0.0 ? length : 1.0);
 }
 
 std::string Circle::GetClassName(void) const { return "Circle"; }
 
 double Circle::Area(void) const {
-  // COMPLETE
+  return M_PI * radius_ * radius_;
 }
 
 double Circle::Perimeter(void) const {
-  // COMPLETE
+  return 2 * M_PI * radius_;
 }
 
 bool Circle::Intersects(const Circle& c) const {
-  // dist(C1,C2) <= r1 + r2
-  // if dist(C1,C2) == r1 + r2, then circles touch at a single point
+    double distance_between_centers = GetCenter().DistanceTo(c.GetCenter());
+    double sum_of_radii = radius_ + c.radius_;
 
-  double distance_between_centers = GetCenter().DistanceTo(c.GetCenter());
-
-  double sum_of_radii = radius_ + c.radius_;
-
-  return (distance_between_centers < sum_of_radii);
+    return (distance_between_centers <= sum_of_radii);
 }
+
 
 std::ostream& operator<<(std::ostream& os, const Circle& obj) {
   os << "Center: " << obj.GetCenter() << std::endl;
@@ -68,5 +62,15 @@ std::ostream& operator<<(std::ostream& os, const Circle& obj) {
 }
 
 std::istream& operator>>(std::istream& is, Circle& obj) {
-  // COMPLETE
+    double x, y, r;
+    std::string color;
+
+    is >> x >> y >> color >> r;
+
+    obj.SetCenter(Point(x, y));
+    obj.SetColor(color);
+
+    obj.radius_ = (r > 0.0 ? r : 1.0);
+
+    return is;
 }
